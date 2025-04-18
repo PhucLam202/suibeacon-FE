@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -92,30 +93,29 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
-    line-height: 1.6;
   }
   
+  /* Base font size adjustments */
   html {
     font-size: 16px;
   }
   
   h1, h2, h3, h4, h5, h6 {
-    @apply tracking-tight font-semibold;
-    line-height: 1.2;
+    @apply tracking-tight;
   }
   
   h1 {
-    font-size: 1.5rem;
+    font-size: 1.5rem; /* 24px */
   }
   
   h2 {
-    font-size: 1.25rem;
+    font-size: 1.25rem; /* 20px */
   }
 }
 
 @layer components {
   .dashboard-card {
-    @apply bg-card rounded-xl border p-4 shadow-sm hover:shadow-md transition-all duration-200;
+    @apply bg-card rounded-lg border p-4 shadow-sm transition-all duration-200 hover:shadow-md;
   }
   
   .nav-link {
@@ -127,10 +127,10 @@
   }
   
   .sidebar-collapsed {
-    @apply w-[4rem] transition-all duration-300;
+    @apply w-[4rem];
   }
   
   .sidebar-expanded {
-    @apply w-[16rem] transition-all duration-300;
+    @apply w-[16rem];
   }
 }

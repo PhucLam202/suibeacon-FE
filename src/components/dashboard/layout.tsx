@@ -6,7 +6,6 @@ import { Sidebar } from "@/components/dashboard/sidebar";
 import { CommandPalette } from "@/components/dashboard/command-palette";
 import { Breadcrumb } from "@/components/dashboard/breadcrumb";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -20,12 +19,10 @@ export function DashboardLayout({
   children,
   breadcrumbs = [],
 }: DashboardLayoutProps) {
-  const isMobile = useIsMobile();
-
   return (
-    <div className="flex min-h-screen flex-col bg-gray-50 dark:bg-gray-900">
+    <div className="flex min-h-screen flex-col">
       <Header />
-      {!isMobile && <Navigation />}
+      <Navigation />
       <div className="flex flex-1">
         <Sidebar />
         <main className="flex-1 overflow-y-auto">
@@ -40,9 +37,6 @@ export function DashboardLayout({
         </main>
       </div>
       <CommandPalette />
-      {isMobile && (
-        <Navigation className="fixed bottom-0 left-0 right-0 border-t bg-background/95 backdrop-blur" />
-      )}
     </div>
   );
 }

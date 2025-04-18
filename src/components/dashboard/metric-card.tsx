@@ -13,6 +13,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { HelpCircle } from "lucide-react";
 
 interface MetricCardProps {
   title: string;
@@ -37,48 +38,47 @@ export function MetricCard({
   className,
 }: MetricCardProps) {
   return (
-    <TooltipProvider>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Card className={cn(
-            "dashboard-card overflow-hidden transition-all duration-200 hover:scale-[1.02]",
-            className
-          )}>
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <div className="flex items-center gap-2">
-                <CardTitle className="text-sm font-medium">
-                  {title}
-                </CardTitle>
-              </div>
-              <div className="rounded-md bg-primary/10 p-1.5 text-primary">
-                {icon}
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-baseline gap-2">
-                <div className="text-xl font-bold tracking-tight">
-                  {value}
-                </div>
-                {change && (
-                  <div
-                    className={cn(
-                      "text-xs",
-                      change.trend === "up" && "text-green-600",
-                      change.trend === "down" && "text-red-600",
-                      change.trend === "neutral" && "text-muted-foreground"
-                    )}
-                  >
-                    {change.value}
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </TooltipTrigger>
-        <TooltipContent side="top" className="max-w-[200px]">
-          <p className="text-xs">{tooltipContent || description}</p>
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Card className={cn("dashboard-card overflow-hidden", className)}>
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <div className="flex items-center gap-2">
+          <CardTitle className="text-sm font-medium">{title}</CardTitle>
+          {tooltipContent && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                  <p className="max-w-xs text-xs">{tooltipContent}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
+        </div>
+        <div className="rounded-md bg-primary/10 p-1.5 text-primary">
+          {icon}
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="flex items-baseline gap-2">
+          <div className="text-2xl font-bold">{value}</div>
+          {change && (
+            <div
+              className={cn(
+                "text-xs",
+                change.trend === "up" && "text-green-600",
+                change.trend === "down" && "text-red-600",
+                change.trend === "neutral" && "text-muted-foreground"
+              )}
+            >
+              {change.value}
+            </div>
+          )}
+        </div>
+        {description && (
+          <p className="text-xs text-muted-foreground">{description}</p>
+        )}
+      </CardContent>
+    </Card>
   );
 }
