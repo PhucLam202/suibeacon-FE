@@ -20,11 +20,11 @@ export function DashboardLayout({
   breadcrumbs = [],
 }: DashboardLayoutProps) {
   return (
-    <div className="flex min-h-screen flex-col bg-neutral-light">
+    <div className="flex min-h-screen flex-col">
       <Header />
       <Navigation />
       <div className="flex flex-1">
-        <Sidebar className="" />
+        <Sidebar />
         <main className="flex-1 overflow-y-auto">
           <div className="container py-6">
             {breadcrumbs.length > 0 && (

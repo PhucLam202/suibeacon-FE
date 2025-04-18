@@ -11,7 +11,7 @@ export default function Projects() {
         
         <div className="flex flex-col space-y-4">
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="rounded-lg border border-neutral-mid p-4 bg-neutral-light">
+            <div key={i} className="rounded-lg border p-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-2">
                   <Skeleton className="h-5 w-[200px]" />

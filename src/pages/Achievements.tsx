@@ -9,7 +9,7 @@ export default function Achievements() {
       <div className="space-y-6">
         <h1 className="text-2xl font-bold">Achievements</h1>
         
-        <div className="rounded-lg border border-neutral-mid p-8 bg-neutral-light">
+        <div className="rounded-lg border p-8">
           <div className="flex flex-col items-center justify-center space-y-4 text-center">
             <Skeleton className="h-16 w-16 rounded-full" />
             <div className="space-y-2">
@@ -22,7 +22,7 @@ export default function Achievements() {
         
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="rounded-lg border border-neutral-mid p-4 bg-neutral-light">
+            <div key={i} className="rounded-lg border p-4">
               <div className="space-y-3">
                 <Skeleton className="mx-auto h-12 w-12 rounded-full" />
                 <Skeleton className="mx-auto h-4 w-[150px]" />

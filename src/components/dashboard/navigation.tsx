@@ -3,12 +3,6 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Home, Trophy, FolderKanban, BarChart3 } from "lucide-react";
 import { useLocation } from "react-router-dom";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 type NavItem = {
   href: string;
@@ -19,7 +13,7 @@ type NavItem = {
 const navItems: NavItem[] = [
   {
     href: "/",
-    label: "Dashboard",
+    label: "Home",
     icon: Home,
   },
   {
@@ -44,36 +38,28 @@ export function Navigation() {
   const currentPath = location.pathname;
 
   return (
-    <TooltipProvider>
-      <nav className="fixed left-0 top-14 flex h-[calc(100vh-3.5rem)] w-14 flex-col items-center border-r border-border/40 bg-background/95 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="flex flex-col space-y-2">
-          {navItems.map((item) => {
-            const isActive = currentPath === item.href;
-            const Icon = item.icon;
+    <nav className="sticky top-16 z-20 flex h-12 w-full items-center justify-center border-b bg-background/95 px-4 backdrop-blur md:px-6">
+      <div className="flex h-full space-x-1">
+        {navItems.map((item) => {
+          const isActive = currentPath === item.href;
+          const Icon = item.icon;
 
-            return (
-              <Tooltip key={item.href}>
-                <TooltipTrigger asChild>
-                  <a
-                    href={item.href}
-                    className={cn(
-                      "flex h-10 w-10 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground",
-                      isActive && "bg-accent text-accent-foreground"
-                    )}
-                    aria-current={isActive ? "page" : undefined}
-                  >
-                    <Icon className="h-5 w-5" />
-                    <span className="sr-only">{item.label}</span>
-                  </a>
-                </TooltipTrigger>
-                <TooltipContent side="right" className="border-border/40">
-                  {item.label}
-                </TooltipContent>
-              </Tooltip>
-            );
-          })}
-        </div>
-      </nav>
-    </TooltipProvider>
+          return (
+            <a
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "nav-link",
+                isActive ? "active" : ""
+              )}
+              aria-current={isActive ? "page" : undefined}
+            >
+              <Icon className="h-4 w-4" />
+              <span>{item.label}</span>
+            </a>
+          );
+        })}
+      </div>
+    </nav>
   );
 }
