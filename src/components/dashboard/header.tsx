@@ -4,8 +4,10 @@ import {
   Bell, 
   ChevronDown,
   LogOut, 
-  Settings, 
-  User as UserIcon 
+  Settings,
+  Globe,
+  Sun,
+  Moon
 } from "lucide-react";
 import { Logo } from "@/components/dashboard/logo";
 import { SearchInput } from "@/components/dashboard/search-input";
@@ -27,51 +29,54 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 export function Header() {
+  const [isDarkMode, setIsDarkMode] = React.useState(false);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle("dark");
+  };
+
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background/95 px-4 backdrop-blur md:px-6">
-      <div className="flex items-center gap-4">
-        <Logo />
+    <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b border-border/40 bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <Logo />
+      
+      <div className="flex flex-1 justify-center px-4">
+        <SearchInput className="w-full max-w-sm" />
       </div>
       
-      <div className="flex-1 px-4">
-        <SearchInput className="mx-auto w-full max-w-xl" />
-      </div>
-      
-      <div className="flex items-center gap-4">
-        <div className="relative">
-          <Button size="icon" variant="ghost" className="relative rounded-full">
-            <Bell className="h-5 w-5" />
-            <Badge className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full p-0 text-[10px]">
-              3
-            </Badge>
-            <span className="sr-only">Notifications</span>
-          </Button>
-        </div>
+      <div className="flex items-center gap-2">
+        <Button variant="ghost" size="icon" className="relative">
+          <Bell className="h-4 w-4" />
+          <Badge className="absolute -right-1 -top-1 h-4 w-4 items-center justify-center rounded-full p-0 text-[10px]">
+            1
+          </Badge>
+        </Button>
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="relative h-8 rounded-full" size="icon">
+            <Button variant="ghost" size="icon" className="relative h-8 w-8 rounded-full">
               <Avatar className="h-8 w-8">
                 <AvatarImage src="/lovable-uploads/d1f6bd9d-355b-4bfe-8c63-5091012c10a1.png" alt="User avatar" />
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
-              <ChevronDown className="ml-1 h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56" align="end" forceMount>
+          <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">John Doe</p>
-                <p className="text-xs leading-none text-muted-foreground">
-                  john.doe@example.com
-                </p>
+                <p className="text-sm font-medium">John Doe</p>
+                <p className="text-xs text-muted-foreground">john.doe@example.com</p>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
+              <DropdownMenuItem onClick={toggleDarkMode}>
+                {isDarkMode ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
+                <span>{isDarkMode ? "Light Mode" : "Dark Mode"}</span>
+              </DropdownMenuItem>
               <DropdownMenuItem>
-                <UserIcon className="mr-2 h-4 w-4" />
-                <span>Profile</span>
+                <Globe className="mr-2 h-4 w-4" />
+                <span>Language</span>
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Settings className="mr-2 h-4 w-4" />
