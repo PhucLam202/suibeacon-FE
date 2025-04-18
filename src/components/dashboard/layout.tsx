@@ -41,7 +41,7 @@ export function DashboardLayout({
       </div>
       <CommandPalette />
       {isMobile && (
-        <Navigation className="fixed bottom-0 left-0 right-0 border-t bg-background/95 backdrop-blur" />
+        <Navigation />
       )}
     </div>
   );
