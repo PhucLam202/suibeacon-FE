@@ -1,14 +1,15 @@
-
 import * as React from "react";
 import { 
   Bell, 
   ChevronDown,
   LogOut, 
   Settings, 
-  User as UserIcon 
+  User as UserIcon,
+  Search,
+  Sun,
+  Moon
 } from "lucide-react";
 import { Logo } from "@/components/dashboard/logo";
-import { SearchInput } from "@/components/dashboard/search-input";
 import { Button } from "@/components/ui/button";
 import { 
   DropdownMenu,
@@ -25,22 +26,74 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { CommandDialog } from "@/components/ui/command";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 export function Header() {
+  const [open, setOpen] = React.useState(false);
+  const [isDarkMode, setIsDarkMode] = React.useState(false);
+  const isMobile = useIsMobile();
+
+  React.useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpen((open) => !open);
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
+
+  const toggleDarkMode = () => {
+    setIsDarkMode(!isDarkMode);
+    document.documentElement.classList.toggle("dark");
+  };
+
   return (
-    <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b bg-background/95 px-4 backdrop-blur md:px-6">
+    <header className="sticky top-0 z-30 flex h-14 w-full items-center justify-between border-b bg-background/95 px-4 backdrop-blur md:px-6">
       <div className="flex items-center gap-4">
         <Logo />
       </div>
       
-      <div className="flex-1 px-4">
-        <SearchInput className="mx-auto w-full max-w-xl" />
-      </div>
-      
       <div className="flex items-center gap-4">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative"
+          onClick={() => setOpen(true)}
+        >
+          <Search className="h-4 w-4" />
+          <kbd className="pointer-events-none absolute right-1.5 top-1.5 hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+            <span className="text-xs">⌘</span>K
+          </kbd>
+        </Button>
+        
+        <CommandDialog open={open} onOpenChange={setOpen}>
+          <div className="px-4 py-2">
+            <h1 className="text-lg font-semibold">Global Search</h1>
+            <p className="text-sm text-muted-foreground">
+              Search anything in the dashboard
+            </p>
+          </div>
+        </CommandDialog>
+
+        <Button 
+          variant="ghost" 
+          size="icon"
+          onClick={toggleDarkMode}
+          className="relative"
+        >
+          {isDarkMode ? (
+            <Moon className="h-4 w-4" />
+          ) : (
+            <Sun className="h-4 w-4" />
+          )}
+        </Button>
+
         <div className="relative">
           <Button size="icon" variant="ghost" className="relative rounded-full">
-            <Bell className="h-5 w-5" />
+            <Bell className="h-4 w-4" />
             <Badge className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full p-0 text-[10px]">
               3
             </Badge>
