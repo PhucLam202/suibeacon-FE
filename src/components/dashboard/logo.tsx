@@ -15,7 +15,7 @@ export function Logo({ className, showTagline = true }: LogoProps) {
         <Cloud className="h-6 w-6" />
       </div>
       <div className="flex flex-col">
-        <span className="text-lg font-semibold leading-none tracking-tight">SkyDash</span>
+        <span className="text-lg font-semibold leading-none tracking-tight">SuiBeacon</span>
         {showTagline && <span className="text-xs text-muted-foreground">Cloud Management Suite</span>}
       </div>
     </div>
