@@ -5,10 +5,7 @@ import {
   ChevronRight, 
   Upload, 
   Menu,
-  Sun,
-  Moon,
   Search,
-  Languages,
   Plus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -30,13 +27,6 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { Badge } from "@/components/ui/badge";
-import { Switch } from "@/components/ui/switch";
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 
 interface SidebarProps {
@@ -46,7 +36,6 @@ interface SidebarProps {
 export function Sidebar({ className }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
   const [isUploadCollapsed, setIsUploadCollapsed] = React.useState(false);
-  const [isDarkMode, setIsDarkMode] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
 
   // Mock recent upload data
@@ -61,12 +50,6 @@ export function Sidebar({ className }: SidebarProps) {
   const filteredUploads = recentUploads.filter(upload => 
     upload.name.toLowerCase().includes(searchValue.toLowerCase())
   );
-
-  // Toggle dark mode
-  const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    document.documentElement.classList.toggle("dark");
-  };
 
   return (
     <aside
@@ -121,160 +104,52 @@ export function Sidebar({ className }: SidebarProps) {
           )}
         </div>
 
-        {/* Quick Actions */}
-        <div className="mb-6 space-y-2">
-          {isCollapsed ? (
-            <div className="space-y-2">
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="mx-auto h-8 w-8"
-                      onClick={toggleDarkMode}
-                    >
-                      {isDarkMode ? (
-                        <Moon className="h-4 w-4" />
-                      ) : (
-                        <Sun className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">
-                    {isDarkMode ? "Light Mode" : "Dark Mode"}
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="mx-auto h-8 w-8"
-                        >
-                          <Languages className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" side="right">
-                        <DropdownMenuItem>English</DropdownMenuItem>
-                        <DropdownMenuItem>French</DropdownMenuItem>
-                        <DropdownMenuItem>German</DropdownMenuItem>
-                        <DropdownMenuItem>Spanish</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TooltipTrigger>
-                  <TooltipContent side="right">
-                    Language
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-          ) : (
-            <>
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Dark Mode</span>
-                <Switch checked={isDarkMode} onCheckedChange={toggleDarkMode} />
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-sm">Language</span>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="h-8">
-                      English
-                      <ChevronRight className="ml-1 h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>English</DropdownMenuItem>
-                    <DropdownMenuItem>French</DropdownMenuItem>
-                    <DropdownMenuItem>German</DropdownMenuItem>
-                    <DropdownMenuItem>Spanish</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </>
-          )}
-        </div>
-
         <Separator className="my-4" />
 
-        {/* Recent Uploads Section */}
-        <Collapsible
-          open={!isUploadCollapsed}
-          onOpenChange={setIsUploadCollapsed}
-          className="space-y-2"
-        >
+        {/* Recent Uploads Section - Simplified */}
+        <div className="space-y-2">
           <div className="flex items-center justify-between">
             {!isCollapsed && (
               <h3 className="text-sm font-medium">Recent Uploads</h3>
             )}
-            <CollapsibleTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className={cn(
-                  "h-8 w-8",
-                  isCollapsed && "mx-auto"
-                )}
-              >
-                <Upload className="h-4 w-4" />
-                <ChevronRight
-                  className={cn(
-                    "ml-auto h-4 w-4 transition-transform",
-                    !isUploadCollapsed && "rotate-90"
-                  )}
-                />
-                <span className="sr-only">Toggle uploads</span>
-              </Button>
-            </CollapsibleTrigger>
+            <Button
+              variant="ghost"
+              size="icon"
+              className={cn(
+                "h-8 w-8",
+                isCollapsed && "mx-auto"
+              )}
+            >
+              <Upload className="h-4 w-4" />
+            </Button>
           </div>
 
-          <CollapsibleContent className="space-y-2">
-            {!isCollapsed && (
-              <div className="relative">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search uploads..."
-                  className="pl-8"
-                  value={searchValue}
-                  onChange={(e) => setSearchValue(e.target.value)}
-                />
-              </div>
-            )}
-
-            <div className={cn(
-              "space-y-1",
-              isCollapsed ? "hidden" : "block"
-            )}>
-              {filteredUploads.map((upload) => (
-                <div
-                  key={upload.id}
-                  className="flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-sidebar-accent"
-                >
-                  <span className="text-sm">{upload.name}</span>
-                  <Badge
-                    variant={
-                      upload.status === "published"
-                        ? "default"
-                        : upload.status === "draft"
-                          ? "outline"
-                          : "secondary"
-                    }
-                    className="text-xs"
-                  >
-                    {upload.status}
-                  </Badge>
-                </div>
-              ))}
+          {!isCollapsed && (
+            <div className="relative">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search uploads..."
+                className="pl-8"
+                value={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+              />
             </div>
-          </CollapsibleContent>
-        </Collapsible>
+          )}
+
+          <div className={cn(
+            "space-y-1",
+            isCollapsed ? "hidden" : "block"
+          )}>
+            {filteredUploads.map((upload) => (
+              <div
+                key={upload.id}
+                className="flex cursor-pointer items-center rounded-md p-2 hover:bg-sidebar-accent"
+              >
+                <span className="text-sm">{upload.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Upload New App Button */}
