@@ -27,14 +27,6 @@ export default function Index() {
   React.useEffect(() => {
     const fetchSummary = async () => {
       try {
-        // Kiểm tra cache
-        const cachedSummary = localStorage.getItem('dashboard_summary');
-        if (cachedSummary) {
-          setSummary(JSON.parse(cachedSummary));
-          setLoading(false);
-          return;
-        }
-
         // Gọi API để lấy summary
         const response = await axios.get(
           "http://localhost:5000/v1/display/summary/0xc9b3863e6f8249dfbd6c559c3f530adfce1e2976b726848c37d550ebb90774fe"
@@ -43,9 +35,6 @@ export default function Index() {
         if (response.data && response.data.data && response.data.data.summary) {
           const summaryData = response.data.data.summary;
           setSummary(summaryData);
-          
-          // Lưu vào localStorage
-          localStorage.setItem('dashboard_summary', JSON.stringify(summaryData));
         }
       } catch (error) {
         console.error("Error fetching summary:", error);
