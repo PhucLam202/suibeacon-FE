@@ -11,10 +11,53 @@ import { ActivityFeed } from "@/components/dashboard/activity-feed";
 import { 
   FolderKanban, 
   Calendar, 
-  Package
+  Package,
+  Loader2
 } from "lucide-react";
+import axios from "axios";
+import { toast } from "@/components/ui/sonner";
 
 export default function Index() {
+  const [summary, setSummary] = React.useState({
+    totalProjects: 0,
+    totalPackages: 0
+  });
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const fetchSummary = async () => {
+      try {
+        // Kiểm tra cache
+        const cachedSummary = localStorage.getItem('dashboard_summary');
+        if (cachedSummary) {
+          setSummary(JSON.parse(cachedSummary));
+          setLoading(false);
+          return;
+        }
+
+        // Gọi API để lấy summary
+        const response = await axios.get(
+          "http://localhost:5000/v1/display/summary/0xc9b3863e6f8249dfbd6c559c3f530adfce1e2976b726848c37d550ebb90774fe"
+        );
+
+        if (response.data && response.data.data && response.data.data.summary) {
+          const summaryData = response.data.data.summary;
+          setSummary(summaryData);
+          
+          // Lưu vào localStorage
+          localStorage.setItem('dashboard_summary', JSON.stringify(summaryData));
+        }
+      } catch (error) {
+        console.error("Error fetching summary:", error);
+        toast.error("Failed to load dashboard summary");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSummary();
+  }, []);
+
   return (
     <DashboardLayout breadcrumbs={[{ title: "Dashboard" }]}>
       <div className="space-y-6">
@@ -24,15 +67,21 @@ export default function Index() {
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {/* Total Projects - Larger box spanning 2 columns */}
           <div className="md:col-span-2">
-            <MetricCard
-              title="Total Projects"
-              value="42"
-              icon={<FolderKanban className="h-5 w-5" />}
-              description="Active projects"
-              change={{ value: "+8%", trend: "up" }}
-              tooltipContent="Total number of active projects in the platform"
-              className="border-l-4 border-l-blue-500 h-full p-6"
-            />
+            {loading ? (
+              <div className="flex h-full items-center justify-center rounded-lg border p-6">
+                <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              </div>
+            ) : (
+              <MetricCard
+                title="Total Projects"
+                value={summary.totalProjects.toString()}
+                icon={<FolderKanban className="h-5 w-5" />}
+                description="Active projects"
+                change={{ value: "+8%", trend: "up" }}
+                tooltipContent="Total number of active projects in the platform"
+                className="border-l-4 border-l-blue-500 h-full p-6"
+              />
+            )}
           </div>
           
           {/* Publish Date */}
@@ -47,15 +96,21 @@ export default function Index() {
             />
             
             {/* Total Packages */}
-            <MetricCard
-              title="Total Packages"
-              value="1,253"
-              icon={<Package className="h-4 w-4" />}
-              description="Across all projects"
-              change={{ value: "+15%", trend: "up" }}
-              tooltipContent="Total number of packages deployed across all projects"
-              className="border-l-4 border-l-green-500 h-[calc(50%-0.5rem)]"
-            />
+            {loading ? (
+              <div className="flex h-[calc(50%-0.5rem)] items-center justify-center rounded-lg border">
+                <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              </div>
+            ) : (
+              <MetricCard
+                title="Total Packages"
+                value={summary.totalPackages.toString()}
+                icon={<Package className="h-4 w-4" />}
+                description="Across all projects"
+                change={{ value: "+15%", trend: "up" }}
+                tooltipContent="Total number of packages deployed across all projects"
+                className="border-l-4 border-l-green-500 h-[calc(50%-0.5rem)]"
+              />
+            )}
           </div>
         </div>
         

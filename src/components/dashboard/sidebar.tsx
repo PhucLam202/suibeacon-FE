@@ -1,55 +1,87 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
-import { 
-  ChevronRight, 
-  Upload, 
-  Menu,
-  Search,
-  Plus
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { 
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
-import { 
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { 
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Menu, Home, BarChart3, Users, Settings, Package, FolderKanban, Trophy, Plus, Upload, Loader2 } from "lucide-react";
+import { useLocation, Link } from "react-router-dom";
+import axios from "axios";
 
 interface SidebarProps {
   className?: string;
 }
 
+interface Project {
+  id: string;
+  name: string;
+  blobId: string;
+}
+
 export function Sidebar({ className }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = React.useState(false);
-  const [isUploadCollapsed, setIsUploadCollapsed] = React.useState(false);
-  const [searchValue, setSearchValue] = React.useState("");
+  const [recentProjects, setRecentProjects] = React.useState<Project[]>([]);
+  const [loading, setLoading] = React.useState(false);
+  const location = useLocation();
 
-  // Mock recent upload data
-  const recentUploads = [
-    { id: 1, name: "Dashboard App v2.1", status: "published" },
-    { id: 2, name: "Mobile UI Kit", status: "draft" },
-    { id: 3, name: "Analytics Dashboard", status: "published" },
-    { id: 4, name: "User Authentication Service", status: "pending" },
-    { id: 5, name: "E-commerce API", status: "draft" },
+  // Fetch projects from API or localStorage
+  React.useEffect(() => {
+    const fetchProjects = async () => {
+      // Check if we have cached projects
+      const cachedProjects = localStorage.getItem('recentProjects');
+      
+      if (cachedProjects) {
+        setRecentProjects(JSON.parse(cachedProjects));
+        return;
+      }
+      
+      // If no cached data, fetch from API
+      try {
+        setLoading(true);
+        const response = await axios.get(
+          "http://localhost:5000/v1/display/0xc9b3863e6f8249dfbd6c559c3f530adfce1e2976b726848c37d550ebb90774fe"
+        );
+        
+        if (response.data && response.data.data && Array.isArray(response.data.data.data)) {
+          // Format projects
+          const formattedProjects = response.data.data.data.map((item) => ({
+            id: item._id,
+            name: item.projectName || `Project ${item._id.substring(0, 8)}`,
+            blobId: item.blobId
+          }));
+          
+          // Save to state and localStorage
+          setRecentProjects(formattedProjects);
+          localStorage.setItem('recentProjects', JSON.stringify(formattedProjects));
+        }
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+        // Fallback to default projects if API fails
+        const fallbackProjects = [
+          { id: "1", name: "Dashboard App v2.1", blobId: "sample1" },
+          { id: "2", name: "Mobile UI Kit", blobId: "sample2" },
+          { id: "3", name: "Analytics Dashboard", blobId: "sample3" },
+          { id: "4", name: "User Authentication Service", blobId: "sample4" },
+          { id: "5", name: "E-commerce API", blobId: "sample5" }
+        ];
+        setRecentProjects(fallbackProjects);
+        localStorage.setItem('recentProjects', JSON.stringify(fallbackProjects));
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchProjects();
+  }, []);
+
+  // Danh sách các mục chính
+  const mainNavItems = [
+    { name: "Home", href: "/", icon: <Home className="h-5 w-5" /> },
+    { name: "Projects", href: "/projects", icon: <FolderKanban className="h-5 w-5" /> },
+    { name: "Achievements", href: "/achievements", icon: <Trophy className="h-5 w-5" /> },
+    { name: "Analytics", href: "/analytics", icon: <BarChart3 className="h-5 w-5" /> },
   ];
-
-  const filteredUploads = recentUploads.filter(upload => 
-    upload.name.toLowerCase().includes(searchValue.toLowerCase())
-  );
 
   return (
     <aside
@@ -84,70 +116,92 @@ export function Sidebar({ className }: SidebarProps) {
         <div className="mb-6 flex items-center gap-3">
           {isCollapsed ? (
             <Avatar className="mx-auto h-8 w-8">
-              <AvatarImage src="/lovable-uploads/d1f6bd9d-355b-4bfe-8c63-5091012c10a1.png" alt="User avatar" />
+              <AvatarImage src="/lovable-uploads/phuclamavata.jpg" alt="User avatar" />
               <AvatarFallback>JD</AvatarFallback>
             </Avatar>
           ) : (
             <>
               <Avatar className="h-10 w-10">
-                <AvatarImage src="/lovable-uploads/d1f6bd9d-355b-4bfe-8c63-5091012c10a1.png" alt="User avatar" />
+                <AvatarImage src="/lovable-uploads/phuclamavata.jpg" alt="User avatar" />
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
               <div className="flex flex-col">
-                <span className="text-sm font-medium">John Doe</span>
+                <span className="text-sm font-medium">Phuc Lam</span>
                 <div className="flex items-center gap-1.5">
                   <Badge variant="outline" className="h-1.5 w-1.5 rounded-full bg-green-500 p-0" />
-                  <span className="text-xs text-muted-foreground">Product Manager</span>
+                  <span className="text-xs text-muted-foreground">Development</span>
                 </div>
               </div>
             </>
           )}
         </div>
 
-        <Separator className="my-4" />
+        {/* Main Navigation */}
+        <div className="space-y-1">
+          {mainNavItems.map((item) => {
+            const isActive = location.pathname === item.href || 
+              (item.href !== "/" && location.pathname.startsWith(item.href));
+            
+            return (
+              <Link to={item.href} key={item.href}>
+                <Button
+                  variant={isActive ? "secondary" : "ghost"}
+                  className={cn(
+                    "w-full justify-start",
+                    isCollapsed && "justify-center px-0"
+                  )}
+                >
+                  {item.icon}
+                  {!isCollapsed && <span className="ml-2">{item.name}</span>}
+                </Button>
+              </Link>
+            );
+          })}
+        </div>
 
-        {/* Recent Uploads Section - Simplified */}
-        <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            {!isCollapsed && (
-              <h3 className="text-sm font-medium">Recent Uploads</h3>
-            )}
-            <Button
-              variant="ghost"
-              size="icon"
-              className={cn(
-                "h-8 w-8",
-                isCollapsed && "mx-auto"
-              )}
-            >
-              <Upload className="h-4 w-4" />
-            </Button>
-          </div>
-
+        {/* Recent Projects Section */}
+        <div className="mt-8">
           {!isCollapsed && (
-            <div className="relative">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search uploads..."
-                className="pl-8"
-                value={searchValue}
-                onChange={(e) => setSearchValue(e.target.value)}
-              />
+            <div className="flex items-center justify-between mb-2">
+              <h3 className="text-sm font-medium">Recent Projects</h3>
+              <Button variant="ghost" size="icon" className="h-6 w-6">
+                <Upload className="h-3.5 w-3.5" />
+              </Button>
             </div>
           )}
-
-          <div className={cn(
-            "space-y-1",
-            isCollapsed ? "hidden" : "block"
-          )}>
-            {filteredUploads.map((upload) => (
-              <div
-                key={upload.id}
-                className="flex cursor-pointer items-center rounded-md p-2 hover:bg-sidebar-accent"
-              >
-                <span className="text-sm">{upload.name}</span>
+          
+          <div className="space-y-1">
+            {isCollapsed ? (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="icon" className="w-full">
+                      <Package className="h-5 w-5" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right">Recent Projects</TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : (
+              <div className="space-y-1">
+                {loading ? (
+                  <div className="flex items-center justify-center py-4">
+                    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                  </div>
+                ) : (
+                  recentProjects.map((project) => (
+                    <Link to={`/projects/${project.id}?blobId=${project.blobId}`} key={project.id}>
+                      <Button
+                        variant="ghost"
+                        className="w-full justify-start text-muted-foreground hover:text-foreground"
+                      >
+                        <span className="truncate">{project.name}</span>
+                      </Button>
+                    </Link>
+                  ))
+                )}
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>

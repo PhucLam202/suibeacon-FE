@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Cloud } from 'lucide-react';
 
 interface LogoProps {
   className?: string;
@@ -11,12 +10,16 @@ interface LogoProps {
 export function Logo({ className, showTagline = true }: LogoProps) {
   return (
     <div className={cn("flex items-center gap-2", className)}>
-      <div className="flex items-center justify-center rounded-md bg-primary p-1 text-primary-foreground">
-        <Cloud className="h-6 w-6" />
+      <div className="flex items-center justify-center rounded-md overflow-hidden">
+        <img 
+          src="/lovable-uploads/BeaconLogo-removebg.png" 
+          alt="SuiBeacon Logo" 
+          className="h-10 w-10 object-contain"
+        />
       </div>
       <div className="flex flex-col">
         <span className="text-lg font-semibold leading-none tracking-tight">SuiBeacon</span>
-        {showTagline && <span className="text-xs text-muted-foreground">Cloud Management Suite</span>}
+        {showTagline && <span className="text-xs text-muted-foreground">Management Packages</span>}
       </div>
     </div>
   );

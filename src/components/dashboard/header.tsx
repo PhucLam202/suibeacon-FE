@@ -8,7 +8,8 @@ import {
   User as UserIcon,
   Languages,
   Sun,
-  Moon
+  Moon,
+  Wallet
 } from "lucide-react";
 import { Logo } from "@/components/dashboard/logo";
 import { SearchInput } from "@/components/dashboard/search-input";
@@ -28,10 +29,14 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { useSuiWallet } from "@/hooks/useSuiWallet";
+import SuiWallet from "@/components/SuiWalletModal";
 
 export function Header() {
   const [language, setLanguage] = React.useState("English");
   const [isDarkMode, setIsDarkMode] = React.useState(false);
+  const [walletModalOpen, setWalletModalOpen] = React.useState(false);
+  const { isConnected, walletAddress } = useSuiWallet();
   
   // Toggle dark mode
   const toggleDarkMode = () => {
@@ -117,12 +122,19 @@ export function Header() {
           </Button>
         </div>
         
+        {/* Wallet Connect Button - Simple version */}
+        <div className="relative">
+          <SuiWallet />
+        </div>
+        
+
+            
         {/* User Menu */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-8 rounded-full" size="icon">
               <Avatar className="h-8 w-8">
-                <AvatarImage src="/lovable-uploads/d1f6bd9d-355b-4bfe-8c63-5091012c10a1.png" alt="User avatar" />
+                <AvatarImage src="/lovable-uploads/phuclamavata.jpg" alt="User avatar" />
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
               <ChevronDown className="ml-1 h-4 w-4" />
@@ -131,9 +143,9 @@ export function Header() {
           <DropdownMenuContent className="w-56" align="end" forceMount>
             <DropdownMenuLabel className="font-normal">
               <div className="flex flex-col space-y-1">
-                <p className="text-sm font-medium leading-none">John Doe</p>
+                <p className="text-sm font-medium leading-none">PhucLam</p>
                 <p className="text-xs leading-none text-muted-foreground">
-                  john.doe@example.com
+                  phuclpst09495@gmail.com
                 </p>
               </div>
             </DropdownMenuLabel>
