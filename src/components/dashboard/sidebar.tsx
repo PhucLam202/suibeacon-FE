@@ -8,7 +8,8 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Menu, Home, BarChart3, Users, Settings, Package, FolderKanban, Trophy, Plus, Upload, Loader2 } from "lucide-react";
 import { useLocation, Link } from "react-router-dom";
 import axios from "axios";
-
+import { useSuiWallet } from '@/hooks/useSuiWallet';
+import { useApiEndpoints } from "@/utils/api";
 interface SidebarProps {
   className?: string;
 }
@@ -24,9 +25,13 @@ export function Sidebar({ className }: SidebarProps) {
   const [recentProjects, setRecentProjects] = React.useState<Project[]>([]);
   const [loading, setLoading] = React.useState(false);
   const location = useLocation();
+  const { isConnected,walletAddress } = useSuiWallet();
+  const endpoints = useApiEndpoints();
 
   // Fetch projects from API or localStorage
   React.useEffect(() => {
+    if (!isConnected) return;
+    
     const fetchProjects = async () => {
       // Check if we have cached projects
       const cachedProjects = localStorage.getItem('recentProjects');
@@ -39,9 +44,7 @@ export function Sidebar({ className }: SidebarProps) {
       // If no cached data, fetch from API
       try {
         setLoading(true);
-        const response = await axios.get(
-          "http://localhost:5000/v1/display/0xc9b3863e6f8249dfbd6c559c3f530adfce1e2976b726848c37d550ebb90774fe"
-        );
+        const response = await axios.get(endpoints.PROJECTS);
         
         if (response.data && response.data.data && Array.isArray(response.data.data.data)) {
           // Format projects
@@ -73,7 +76,7 @@ export function Sidebar({ className }: SidebarProps) {
     };
     
     fetchProjects();
-  }, []);
+  }, [isConnected, endpoints.PROJECTS]);
 
   // Danh sách các mục chính
   const mainNavItems = [
@@ -121,7 +124,7 @@ export function Sidebar({ className }: SidebarProps) {
             </Avatar>
           ) : (
             <>
-              <Avatar className="h-10 w-10">
+              {/* <Avatar className="h-10 w-10">
                 <AvatarImage src="/lovable-uploads/phuclamavata.jpg" alt="User avatar" />
                 <AvatarFallback>JD</AvatarFallback>
               </Avatar>
@@ -131,7 +134,7 @@ export function Sidebar({ className }: SidebarProps) {
                   <Badge variant="outline" className="h-1.5 w-1.5 rounded-full bg-green-500 p-0" />
                   <span className="text-xs text-muted-foreground">Development</span>
                 </div>
-              </div>
+              </div> */}
             </>
           )}
         </div>

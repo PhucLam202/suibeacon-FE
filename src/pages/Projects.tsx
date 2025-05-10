@@ -10,6 +10,8 @@ import { FolderKanban, Plus, Search, Edit, Eye, Trash2, MoreVertical, Calendar, 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import axios from "axios";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { useApiEndpoints } from "@/utils/api";
+import { useSuiWallet } from "@/hooks/useSuiWallet";
 
 // Định nghĩa kiểu dữ liệu cho project
 interface Project {
@@ -40,6 +42,8 @@ export const StatusBadge = ({ status }) => {
 
 export default function Projects() {
   const navigate = useNavigate();
+  const { isConnected, walletAddress } = useSuiWallet();
+  const endpoints = useApiEndpoints();
   const [searchQuery, setSearchQuery] = React.useState("");
   const [statusFilter, setStatusFilter] = React.useState("all");
   const [projects, setProjects] = React.useState<Project[]>([]);
@@ -67,12 +71,12 @@ export default function Projects() {
 
   // Fetch data from API
   React.useEffect(() => {
+    if (!isConnected) return;
+    
     const fetchProjects = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(
-          "http://localhost:5000/v1/display/0xc9b3863e6f8249dfbd6c559c3f530adfce1e2976b726848c37d550ebb90774fe"
-        );
+        const response = await axios.get(endpoints.PROJECTS);
         
         console.log("API Response:", response.data);
         
@@ -150,7 +154,7 @@ export default function Projects() {
     };
 
     fetchProjects();
-  }, []);
+  }, [isConnected, endpoints.PROJECTS]);
   
   const filteredProjects = projects.filter(project => {
     const matchesSearch = project.name.toLowerCase().includes(searchQuery.toLowerCase()) || 

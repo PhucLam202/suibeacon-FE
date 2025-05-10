@@ -1,9 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { useSuiWallet } from "@/hooks/useSuiWallet";
-import { Wallet } from "lucide-react";
+import { Wallet, Check } from "lucide-react";
 import { ConnectButton } from '@mysten/dapp-kit';
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Check } from "lucide-react";
 
 interface SuiWalletProps {
   className?: string;
@@ -40,18 +39,9 @@ const SuiWallet = ({ className }: SuiWalletProps) => {
             </Button>
           </div>
         ) : (
-          <ConnectButton>
-            {({ connecting, connect }) => (
-              <Button 
-                onClick={connect}
-                disabled={connecting || isConnecting}
-                className="w-full justify-start px-3 py-2"
-                variant="ghost"
-              >
-                {connecting || isConnecting ? "Đang kết nối..." : "Kết nối với Sui Wallet"}
-              </Button>
-            )}
-          </ConnectButton>
+          <div className="py-2">
+            <ConnectButton />
+          </div>
         )}
       </PopoverContent>
     </Popover>
