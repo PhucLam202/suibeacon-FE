@@ -10,6 +10,8 @@ import {
 import { StatusBadge } from "@/pages/Projects";
 import axios from "axios";
 import { toast } from "@/components/ui/sonner";
+import { useApiEndpoints } from "@/utils/api";
+import { useSuiWallet } from "@/hooks/useSuiWallet";
 
 // Interface cho dữ liệu project
 interface Project {
@@ -31,13 +33,17 @@ export default function ProjectDetail() {
   const [project, setProject] = React.useState<Project | null>(null);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<string | null>(null);
+  const endpoints = useApiEndpoints();
   
   // Lấy blobId từ query params
   const queryParams = new URLSearchParams(location.search);
   const blobId = queryParams.get('blobId');
-  
+  const isConnected = useSuiWallet().isConnected;
+
   // Fetch dữ liệu project và chi tiết
   React.useEffect(() => {
+    if (!isConnected) return;
+    
     const fetchProjectDetail = async () => {
       if (!id) {
         setError("Project ID is missing");
@@ -75,9 +81,7 @@ export default function ProjectDetail() {
         console.log(`Fetching details for blob: ${blobId}`);
         
         // Trước tiên, lấy thông tin dự án để có tên dự án
-        const projectInfoResponse = await axios.get(
-          "http://localhost:5000/v1/display/0xc9b3863e6f8249dfbd6c559c3f530adfce1e2976b726848c37d550ebb90774fe"
-        );
+        const projectInfoResponse = await axios.get(endpoints.PROJECTS);
         
         // Tìm dự án có id phù hợp
         let projectName = "";
@@ -93,9 +97,7 @@ export default function ProjectDetail() {
         }
         
         // Gọi API để lấy chi tiết
-        const response = await axios.get(
-          `http://localhost:5000/v1/walrus/download/${blobId}`
-        );
+        const response = await axios.get(endpoints.DOWNLOAD(blobId));
         
         
         if (response.data && response.data.data && response.data.data.blob) {
@@ -157,9 +159,9 @@ export default function ProjectDetail() {
         setLoading(false);
       }
     };
-    
+
     fetchProjectDetail();
-  }, [id, blobId]);
+  }, [id, blobId, isConnected, endpoints]);
   
   // Hiển thị loading state
   if (loading) {

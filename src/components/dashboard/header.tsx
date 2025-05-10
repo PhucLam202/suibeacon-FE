@@ -129,7 +129,7 @@ export function Header() {
         
 
             
-        {/* User Menu */}
+        {/* User Menu
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="relative h-8 rounded-full" size="icon">
@@ -166,7 +166,8 @@ export function Header() {
               <span>Log out</span>
             </DropdownMenuItem>
           </DropdownMenuContent>
-        </DropdownMenu>
+        </DropdownMenu>Dashboard Overview
+         */}
       </div>
     </header>
   );
