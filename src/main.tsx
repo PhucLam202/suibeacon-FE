@@ -9,7 +9,7 @@ import '@mysten/dapp-kit/dist/index.css';
 // Tạo QueryClient instance
 const queryClient = new QueryClient();
 
-// Cấu hình mạng Sui
+// Sử dụng URL trực tiếp thay vì import getFullnodeUrl
 const networks = {
   testnet: { url: getFullnodeUrl('testnet') },
   mainnet: { url: getFullnodeUrl('mainnet') },
