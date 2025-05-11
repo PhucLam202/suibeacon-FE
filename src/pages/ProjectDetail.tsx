@@ -68,12 +68,10 @@ export default function ProjectDetail() {
         
         if (cachedData) {
           // Nếu có dữ liệu trong cache, sử dụng nó
-          console.log("Using cached project data");
           const parsedData = JSON.parse(cachedData);
           setProject(parsedData);
           setError(null);
           setLoading(false);
-          toast.success("Loaded project from cache");
           return;
         }
         
@@ -418,7 +416,7 @@ export default function ProjectDetail() {
             )}
             
             {/* Actions card */}
-            <div className="rounded-xl border bg-card p-6 shadow-md transition-all hover:shadow-lg dark:border-slate-700 dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-800">
+            {/* <div className="rounded-xl border bg-card p-6 shadow-md transition-all hover:shadow-lg dark:border-slate-700 dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-800">
               <h3 className="text-xl font-semibold mb-4">Actions</h3>
               <div className="flex flex-col space-y-3">
                 <Button className="w-full bg-sky-600 hover:bg-sky-700">
@@ -444,7 +442,7 @@ export default function ProjectDetail() {
                   Delete Project
                 </Button>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

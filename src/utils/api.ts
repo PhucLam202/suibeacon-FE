@@ -1,17 +1,27 @@
-// Lấy base URL từ biến môi trường
-export const LOCAL_HOST_ENV = import.meta.env.LOCAL_HOST_ENV || 'http://localhost:5000';
+// Định nghĩa các URL cơ sở - sử dụng giá trị cố định thay vì biến môi trường
+export const LOCAL_HOST_ENV = 'http://localhost:5000';
+export const PRODUCT_ENV = 'https://suibeacon-be.onrender.com';
 
+// Sử dụng URL production
+const API_BASE_URL = PRODUCT_ENV;
+
+// Địa chỉ ví mặc định khi không có wallet được kết nối
 
 // API endpoints với khả năng sử dụng địa chỉ ví
 export const API_ENDPOINTS = {
   // Phương thức để lấy endpoints với địa chỉ ví cụ thể
   withWallet: (walletAddress: string | null) => {
+    // Sử dụng địa chỉ ví được cung cấp hoặc địa chỉ mặc định nếu không có
     const address = walletAddress;
-    return {
-      PROJECTS: `${LOCAL_HOST_ENV}/v1/display/${address}`,
-      SUMMARY: `${LOCAL_HOST_ENV}/v1/display/summary/${address}`,
-      DOWNLOAD: (blobId: string) => `${LOCAL_HOST_ENV}/v1/walrus/download/${blobId}`
+    
+    
+    const endpoints = {
+      PROJECTS: `${API_BASE_URL}/v1/display/${address}`,
+      SUMMARY: `${API_BASE_URL}/v1/display/summary/${address}`,
+      DOWNLOAD: (blobId: string) => `${API_BASE_URL}/v1/walrus/download/${blobId}`
     };
+        
+    return endpoints;
   }
 };
 
