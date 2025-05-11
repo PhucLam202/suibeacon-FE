@@ -51,8 +51,8 @@ export function ActivityFeed({ className }: { className?: string }) {
     {
       id: 1,
       user: {
-        name: "John Doe",
-        avatar: "/lovable-uploads/d1f6bd9d-355b-4bfe-8c63-5091012c10a1.png",
+        name: "Phuc Lam",
+        avatar: "/lovable-uploads/phuclamavata.jpg",
         initials: "JD",
       },
       action: "uploaded",
