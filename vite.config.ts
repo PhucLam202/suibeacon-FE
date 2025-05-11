@@ -19,4 +19,18 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      external: [
+        '@mysten/sui.js/client',
+        '@mysten/sui.js',
+      ],
+      output: {
+        globals: {
+          '@mysten/sui.js/client': 'SuiClient',
+          '@mysten/sui.js': 'Sui'
+        }
+      }
+    }
+  }
 }));
