@@ -21,10 +21,6 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     rollupOptions: {
-      external: [
-        '@mysten/sui.js/client',
-        '@mysten/sui.js',
-      ],
       output: {
         globals: {
           '@mysten/sui.js/client': 'SuiClient',
