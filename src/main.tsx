@@ -3,7 +3,7 @@ import App from './App.tsx'
 import './index.css'
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SuiClientProvider, WalletProvider } from '@mysten/dapp-kit';
-import { getFullnodeUrl } from '@mysten/sui.js/client';
+import { getFullnodeUrl } from '@mysten/sui/client';
 import '@mysten/dapp-kit/dist/index.css';
 
 // Tạo QueryClient instance
@@ -18,7 +18,7 @@ const networks = {
 
 createRoot(document.getElementById("root")!).render(
   <QueryClientProvider client={queryClient}>
-    <SuiClientProvider networks={networks} defaultNetwork="testnet">
+    <SuiClientProvider networks={networks} defaultNetwork="mainnet">
       <WalletProvider autoConnect>
         <App />
       </WalletProvider>
